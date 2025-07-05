@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_3/core/dio_client.dart';
 import 'package:flutter_3/data/create_response.dart';
@@ -7,17 +8,32 @@ import 'package:flutter_3/data/index_response.dart';
 class ItemTypeRepository extends DioClient {
   Future<CreateResponse> create(Map<String, dynamic> params) async {
     var response = await dio.post("item_type", data: params);
-    return CreateResponse.fromJson(response.data);
+    dynamic responseData = response.data;
+    if (responseData is String) {
+      responseData = json.decode(responseData);
+    }
+
+    return CreateResponse.fromJson(responseData);
   }
 
   Future<IndexResponse> index() async {
     var response = await dio.get("item_type");
-    return IndexResponse.fromJson(response.data);
+    dynamic responseData = response.data;
+    if (responseData is String) {
+      responseData = json.decode(responseData);
+    }
+
+    return IndexResponse.fromJson(responseData);
   }
 
   Future<EditResponse> update(int id, Map<String, dynamic> data) async {
-    // Corrected the URL and used the fromJson factory
     final response = await dio.put("item_type/$id", data: data);
-    return EditResponse.fromJson(response.data);
+
+    dynamic responseData = response.data;
+    if (responseData is String) {
+      responseData = json.decode(responseData);
+    }
+
+    return EditResponse.fromJson(responseData);
   }
 }
