@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3/presentation/delete_item_type/cubit/delete_item_type_cubit.dart';
 import 'package:flutter_3/presentation/edit_item_type/edit_item_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_3/presentation/add_item_type/add_item_type.dart';
@@ -46,9 +47,44 @@ class _MyHomePageState extends State<MyHomePage> {
                               context.read<ItemTypeIndexCubit>().index();
                             },
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {},
+                          BlocProvider(
+                            create: (context) => DeleteItemTypeCubit(),
+                            child: BlocListener<
+                              DeleteItemTypeCubit,
+                              DeleteItemTypeState
+                            >(
+                              listener: (context, state) {
+                                if (state is DeleteItemTypeSuccess) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.message),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                  context.read<ItemTypeIndexCubit>().index();
+                                }
+                                if (state is DeleteItemTypeError) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(state.message),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Builder(
+                                builder: (context) {
+                                  return IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      context
+                                          .read<DeleteItemTypeCubit>()
+                                          .delete(itemType.id);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ],
                       ),

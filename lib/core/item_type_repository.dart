@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_3/core/dio_client.dart';
 import 'package:flutter_3/data/create_response.dart';
+import 'package:flutter_3/data/delete_response.dart';
 import 'package:flutter_3/data/edit_response.dart';
 import 'package:flutter_3/data/index_response.dart';
 
@@ -35,5 +36,14 @@ class ItemTypeRepository extends DioClient {
     }
 
     return EditResponse.fromJson(responseData);
+  }
+
+  Future<DeleteResponse> delete(int id) async {
+    final response = await dio.delete("item_type/$id");
+    dynamic responseData = response.data;
+    if (responseData is String) {
+      responseData = json.decode(responseData);
+    }
+    return DeleteResponse.fromJson(responseData);
   }
 }
