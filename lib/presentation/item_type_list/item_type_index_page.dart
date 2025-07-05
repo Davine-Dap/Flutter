@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_3/presentation/edit_item_type/edit_item_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_3/presentation/add_item_type/add_item_type.dart';
 import 'package:flutter_3/data/model/item_type.dart';
@@ -21,19 +22,36 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context, state) {
           if (state is ItemTypeIndexLoaded) {
             return Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: ListView.builder(
                 itemCount: state.itemTypes.length,
                 itemBuilder: (context, index) {
                   ItemType itemType = state.itemTypes[index];
-                  return Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(itemType.name),
-                        Text(itemType.toString()),
-                      ],
+                  return Card(
+                    child: ListTile(
+                      title: Text(itemType.name),
+                      subtitle: Text(itemType.status ?? 'N/A'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EditItemPage(item: itemType),
+                                ),
+                              );
+                              context.read<ItemTypeIndexCubit>().index();
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -57,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
           context.read<ItemTypeIndexCubit>().index();
         },
-        tooltip: 'Increment',
+        tooltip: 'Tambah Data',
         child: const Icon(Icons.add),
       ),
     );
