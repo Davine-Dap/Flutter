@@ -15,9 +15,6 @@ class ItemTypeIndexCubit extends Cubit<ItemTypeIndexState> {
 
   void index() async {
     emit(ItemTypeIndexLoading());
-    IndexResponse result = await itemTypeRepository.index();
-    debugPrint("Hasil ${result.itemTypes.length}");
-    emit(ItemTypeIndexLoaded(itemTypes: result.itemTypes));
     try {
       IndexResponse result = await itemTypeRepository.index();
       debugPrint("Hasil ${result.itemTypes.length}");

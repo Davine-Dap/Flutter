@@ -16,7 +16,8 @@ class ItemTypeRepository extends DioClient {
   }
 
   Future<EditResponse> update(int id, Map<String, dynamic> data) async {
-    final response = await dio.put("Item_type/$id", data: data);
-    return EditResponse(response.data, true);
+    // Corrected the URL and used the fromJson factory
+    final response = await dio.put("item_type/$id", data: data);
+    return EditResponse.fromJson(response.data);
   }
 }
